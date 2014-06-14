@@ -1586,7 +1586,8 @@ var requirejs, require, define;
             nameToUrl: function (moduleName, ext, skipExt) {
                 var paths, syms, i, parentModule, url,
                     parentPath, bundleId,
-                    pkgMain = getOwn(config.pkgs, moduleName);
+                    pkgMain = getOwn(config.pkgs, moduleName),
+                    cdnHost;
 
                 if (pkgMain) {
                     moduleName = pkgMain;
@@ -1636,9 +1637,18 @@ var requirejs, require, define;
                     url = (url.charAt(0) === '/' || url.match(/^[\w\+\.\-]+:/) ? '' : config.baseUrl) + url;
                 }
 
-                return config.urlArgs ? url +
+                url =  config.urlArgs ? url +
                                         ((url.indexOf('?') === -1 ? '?' : '&') +
                                          config.urlArgs) : url;
+
+                if (isFunction(cfg.getCdn)) {
+                    cdnHost = cfg.getCdn(moduleName);
+                    if (cdnHost) {
+                        url = url.replace(url.match(/http(s)?:\/\/[\w\d\.].*?\//)[0], cdnHost + '/');
+                    }
+                }
+
+                return url;
             },
 
             //Delegates to req.load. Broken out as a separate function to
@@ -1740,6 +1750,10 @@ var requirejs, require, define;
 
         if (config) {
             context.configure(config);
+        }
+
+        if (config && isFunction(config.getCdn)) {
+            cfg.getCdn = config.getCdn;
         }
 
         return context.require(deps, callback, errback);
