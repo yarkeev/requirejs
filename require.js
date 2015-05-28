@@ -1773,9 +1773,7 @@ var requirejs, require, define;
      * that have a better solution than setTimeout.
      * @param  {Function} fn function to execute later.
      */
-    req.nextTick = typeof setTimeout !== 'undefined' ? function (fn) {
-        setTimeout(fn, 4);
-    } : function (fn) { fn(); };
+    req.nextTick = function (fn) { fn(); };
 
     /**
      * Export require as a global, but only if it does not already exist.
