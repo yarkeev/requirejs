@@ -33,6 +33,7 @@ var requirejs, require, define;
         defContextName = '_',
         //Oh the tragedy, detecting opera. See the usage of isOpera for reason.
         isOpera = typeof opera !== 'undefined' && opera.toString() === '[object Opera]',
+        msieVersion = (navigator.userAgent.toLowerCase().indexOf('msie') != -1) ? parseInt(navigator.userAgent.toLowerCase().split('msie')[1]) : false,
         contexts = {},
         cfg = {},
         globalDefQueue = [],
@@ -1773,7 +1774,13 @@ var requirejs, require, define;
      * that have a better solution than setTimeout.
      * @param  {Function} fn function to execute later.
      */
-    req.nextTick = function (fn) { fn(); };
+    if (msieVersion <= 8) {
+        req.nextTick = typeof setTimeout !== 'undefined' ? function (fn) {
+            setTimeout(fn, 4);
+        } : function (fn) { fn(); };
+    } else {
+        req.nextTick = function (fn) { fn(); };
+    }
 
     /**
      * Export require as a global, but only if it does not already exist.
