@@ -1774,7 +1774,7 @@ var requirejs, require, define;
      * that have a better solution than setTimeout.
      * @param  {Function} fn function to execute later.
      */
-    if (msieVersion <= 8) {
+    if (msieVersion <= 9) {
         req.nextTick = typeof setTimeout !== 'undefined' ? function (fn) {
             setTimeout(fn, 4);
         } : function (fn) { fn(); };
