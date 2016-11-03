@@ -1846,7 +1846,9 @@ var requirejs, require, define;
         node.type = config.scriptType || 'text/javascript';
         node.charset = 'utf-8';
         node.async = true;
-        node.crossOrigin = 'anonymous';
+        if (window.isCrossOriginEnabled) {
+            node.crossOrigin = 'anonymous';
+        }
         return node;
     };
 
