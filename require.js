@@ -1846,7 +1846,7 @@ var requirejs, require, define;
         node.type = config.scriptType || 'text/javascript';
         node.charset = 'utf-8';
         node.async = true;
-        if (window.isCrossOriginEnabled) {
+        if (window.isCrossOriginEnabled && url.indexOf(config.baseUrl) === 0) {
             node.crossOrigin = 'anonymous';
         }
         return node;
